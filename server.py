@@ -48,7 +48,7 @@ class ScanHandler(BaseHTTPRequestHandler):
                 else:
                     # with open('./webtable' + self.path, 'rb') as f:
                     #     self.wfile.write(f.read())
-                    with open('.' + self.path, 'rb') as f:
+                    with open('./web' + self.path, 'rb') as f:
                         self.wfile.write(f.read())
 
             except IOError as e:
