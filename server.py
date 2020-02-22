@@ -17,7 +17,7 @@ class ScanHandler(BaseHTTPRequestHandler):
         mimetype = 'text/plain'  # default case
 
         if self.path == '/':
-            self.path = '/bloc-chat.html'
+            self.path = '/index.html'
 
         send_reply = False
 
