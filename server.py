@@ -64,6 +64,10 @@ class ScanHandler(BaseHTTPRequestHandler):
             
         elif self.path.startswith('/submit'):
             pass
+        elif self.path.startswith('/poll'):
+            # server sent event init
+
+            mimetype = 'text/event-stream'
 
         else:
             if '.' in self.path:
