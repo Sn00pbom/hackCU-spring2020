@@ -2,8 +2,11 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from io import StringIO
 import random
 import string
+from urllib.parse import urlparse, parse_qs
+import json
 
 import temp_loader
+import chatcrypto
 
 
 
@@ -16,6 +19,9 @@ class ScanHandler(BaseHTTPRequestHandler):
         wl_io = StringIO(self.rfile.read(datalen).decode('utf-8'))
         self.send_response(200)
         self.end_headers()
+
+        dat = wl_io.read()
+        print(dat)
 
     def do_GET(self):
         """Serve GET Request"""
@@ -41,20 +47,42 @@ class ScanHandler(BaseHTTPRequestHandler):
             self.CONVOS[sid] = tch
             tch.save()
             self.wfile.write(bytes(sid, 'utf-8'))
+        elif self.path.startswith('/hash'):
+            out = urlparse(self.path)
+            qsp = parse_qs(out.query)
+            mimetype = 'text/plain'
+            self.send_response(200) # no content response
+            self.send_header('content-type', mimetype)
+            self.end_headers()
+
+            bdict = qsp['bc']
+            bdict = json.loads(bdict[0])
+            b = chatcrypto.Block.from_dict(bdict)  # get last entry
+            hc = qsp['headhash'][0]
+            hs = b.compute_block_hash()
+            self.wfile.write(b'1' if hs == hc else b'0')
+            
+        elif self.path.startswith('/submit'):
+            pass
+
         else:
             if '.' in self.path:
                 # file request case
+                folder = './web'
                 if self.path.endswith('.css'):
                     mimetype = 'text/css'
                 if self.path.endswith('.js'):
                     mimetype = 'application/javascript'
+                if self.path.endswith('.json'):
+                    mimetype = 'text/json'
+                    folder = './data'
 
                 try:
                     self.send_response(200)
                     self.send_header('content-type', mimetype)
                     self.end_headers()
                     print(self.path)
-                    with open('./web' + self.path, 'rb') as f:
+                    with open(folder + self.path, 'rb') as f:
                         self.wfile.write(f.read())
                 except:
                     self.send_response(404)
