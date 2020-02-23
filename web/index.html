@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="jshashes/hashes.js"></script>
+  <script src="/node_dev.js"></script>
 </head>
 
 <link rel="stylesheet" type="text/css" href="style.css">
@@ -18,24 +20,13 @@
   <h1>ZoomerChat</h1>
   <p>No accounts, no signups, just bullsh*t</p> 
 </div>
-  
 
-<!-- <script>
-  function myFunction() {
-    var x = document.getElementById("myelement");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
-  } 
-  
-</script> -->
+
+<script src="node_dev.js"></script>
 
 <script>
   function request(){
     $.get( "./create", function(data) { window.location.replace(data) });
-    // $.get( "./create", alert("wewlad") );
   }
   
 </script>
@@ -43,36 +34,5 @@
 <div>
   <button type="button" onclick = "request()" id = "createbutton" class="btn btn-outline-primary">Create Chat</button>
 </div>
-
-<!-- <div>
-
-  <form action="/" method="post" enctype="multipart/form-data">
-  
-    <div class = "input" id = "myelement">
-    
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-        </div>
-        <input type="text" class="form-control" placeholder="groupname" aria-label="Username" aria-describedby="basic-addon1" id = "group name">
-      </div>
-
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="username" aria-label="Recipient's username" aria-describedby="basic-addon2" id = "username" >
-        <div class="input-group-append">
-        </div>
-      </div>
-
-    </div>
-  
-    <div>
-      <button type="button" onclick = "request()" id = "requestbutton" class="btn btn-outline-primary">Submit</button>
-    </div>
-
-
-  </form>
-
-</div> -->
-
-
 </body>
 </html>
