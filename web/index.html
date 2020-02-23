@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Zoomer Chat</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="jumbotron text-center">
+  <h1>ZoomerChat</h1>
+  <p>No accounts, no signups, just bullsh*t</p> 
+</div>
+  
+<div style="text-align: center">
+  <button type="button" onclick = "myFunction()" id = "createbutton" class="btn btn-outline-primary">Create Chat</button>
+</div>
+
+<script>
+  function myFunction() {
+    var x = document.getElementById("myelement");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  } 
+  
+</script>
+
+<script>
+  function request(){
+    $.get( "./create", function(data) { alert(data) });
+    // $.get( "./create", alert("wewlad") );
+  }
+  
+</script>
+  
+</script>
+<p id="demo"></p>
+
+
+<div align = "center">
+
+  <form action="/" method="post" enctype="multipart/form-data">
+  
+    <div id = "myelement" style="display:none">
+    
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+        </div>
+        <input type="text" class="form-control" placeholder="groupname" aria-label="Username" aria-describedby="basic-addon1" id = "group name">
+      </div>
+
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="username" aria-label="Recipient's username" aria-describedby="basic-addon2" id = "username" >
+        <div class="input-group-append">
+        </div>
+      </div>
+
+      <div style="text-align: center">
+          <button type="button" onclick = "request()" id = "requestbutton" class="btn btn-outline-primary">Submit</button>
+      </div>
+
+    </div>
+  
+  </form>
+</div>
+
+
+</body>
+</html>
