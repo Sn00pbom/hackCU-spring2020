@@ -1,10 +1,14 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from io import StringIO
 import random
+import string
+
+import temp_loader
+
 
 
 class ScanHandler(BaseHTTPRequestHandler):
-    convos = []
+    CONVOS = {}
 
     def do_POST(self):
         """Serve POST Request"""
@@ -18,59 +22,72 @@ class ScanHandler(BaseHTTPRequestHandler):
         mimetype = 'text/plain'  # default case
 
         if self.path == '/':
+            # index case
             self.path = '/index.html'
-
-        send_reply = False
-        is_user_error = False
-
-        if self.path == '/create':
+            mimetype = 'text/html'
+            self.send_response(200)
+            self.send_header('content-type', mimetype)
+            self.end_headers()
+            with open('./web' + self.path, 'rb') as f:
+                self.wfile.write(f.read())
+        elif self.path == '/create':
+            # create group case
             mimetype = 'text/plain'
             self.send_response(200)
             self.send_header('content-type', mimetype)
             self.end_headers()
-            r = random.randint(111,999)
-            print('create', r)
-            self.wfile.write(bytes(str(r), 'utf-8'))
-
-        elif self.path == '/index.html':
-            mimetype = 'text/html'
-            send_reply = True
+            sid = get_id()
+            tch = temp_loader.TChatHistory(sid)
+            self.CONVOS[sid] = tch
+            tch.save()
+            self.wfile.write(bytes(sid, 'utf-8'))
         else:
-            p = self.path[1:]
-            try:
-                p = int(p)
-                mimetype = 'text/plain'
-                send_reply = True
+            if '.' in self.path:
+                # file request case
+                if self.path.endswith('.css'):
+                    mimetype = 'text/css'
 
-            except ValueError as e:
-                mimetype = 'text/html'
-                send_reply = True
-                is_user_error = True
-
-        if send_reply:
-            if is_user_error:
-                self.send_response(200)
-                self.send_header('content-type', mimetype)
-                self.end_headers()
-                with open('./web' + '/error.html', 'rb') as f:
-                    self.wfile.write(f.read())
-            else:
                 try:
                     self.send_response(200)
                     self.send_header('content-type', mimetype)
                     self.end_headers()
-                    if self.path == '/index.html':
-                        with open('./web' + self.path, 'rb') as f:
-                            self.wfile.write(f.read())
-                    else:
-                        self.wfile.write(bytes(self.path[1:], 'utf-8'))
-
-                except IOError as e:
+                    print(self.path)
+                    with open('./web' + self.path, 'rb') as f:
+                        self.wfile.write(f.read())
+                except:
                     self.send_response(404)
-                    print(e)
 
+
+            else:
+                # group chat case
+                if self.path[1:] in self.CONVOS.keys():
+                    # group exists case
+                    mimetype = 'text/html'
+                    self.send_response(200)
+                    self.send_header('content-type', mimetype)
+                    self.end_headers()
+                    # with open('./web' + self.path, 'rb') as f:
+                    #     self.wfile.write(f.read())
+                    with open('./web' + '/chathome.html', 'rb') as f:
+                        self.wfile.write(f.read())
+
+                else:
+                    # no group case
+                    mimetype = 'text/html'
+                    self.send_response(200)
+                    self.send_header('content-type', mimetype)
+                    self.end_headers()
+                    with open('./web/error.html', 'rb') as f:
+                        self.wfile.write(f.read())
+
+def get_id():
+    s = ''
+    for _ in range(6):
+        s += random.choice(string.ascii_letters + string.digits)
+    return s
 
 def start_server():
+    ScanHandler.CONVOS = temp_loader.populate_convos()
     server = HTTPServer(('', 7531), ScanHandler)
     try:
         print('Server start')
