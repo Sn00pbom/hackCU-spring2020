@@ -51,6 +51,19 @@ a {
     border:1px solid #ACD8F0; }
   
 #submit { width: 60px; }
+
+#entrystuff {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding-left: 50px;
+  padding-bottom: 50px;
+}
+
+#entry {
+  text-align: left;
+  padding-left: 50px;
+}
   
 .error { color: #ff0000; }
   
@@ -62,72 +75,74 @@ a {
   
 .msgln { margin:0 0 2px 0; }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
-<script type="text/javascript">
-	var encrypted;
-  var decrypted;
-  var message = "gAAAAABeUlFH68CYdD5QKEV_BO8IY1X5ix8NP90oY554c3IqVAT6XeQRirG3CZDCXDmXjHU9S-RfH0RFLWZwj0CzER_qYA8KQR898CLt6ZheiokCfa_SMOo=";
-	var key = "XUAnULtC5geCdt383CVPryp1kDRGEOtr1KabYKnlemY=";
-    
-	function crypt(){
-		//console.log("hi")
-        encrypted=CryptoJS.AES.encrypt(message, key, { iv: iv });
-		console.log(message);
-		//encrypted=CryptoJS.AES.encrypt(message,key);
-		console.log(encrypted.toString());
-	}
-	function decrypt(){
-		decrypted=CryptoJS.AES.decrypt(encrypted,key);
-		console.log(decrypted.toString(CryptoJS.enc.Utf8));
-	}
+<div id=entries>
 
-
-</script>
-<script>
-	
-  function myFunction() {
-	var x = document.getElementById("name-open");
-	if (x.style.display === "none") {
-	  x.style.display = "block";
-	}
-  }  
-    function myFunction2() {
-    	var empty_stirng=true;
-    var x = document.getElementById("wrapper");
-    var name = document.getElementById("username").value;
-    if(name.length==""){
-    	empty_stirng=false;
-    }
-    if(empty_stirng==true){
-    	document.getElementById("name-of-user").innerHTML=name,
-    	//console.log(name)
-    	closeall();
-    	    if (x.style.display === "none") {
-      x.style.display = "block";
-    }
-    }
-    else{
-    	alert("You need a name boss")
-    }
-
-  } 
-
-  function closeall(){
-  	var x = document.getElementById("name-open");
-  	var y = document.getElementById("submit-button-div");
-  	var z = document.getElementById("createbutton");
-  	x.style.display="none";
-  	y.style.display="none";
-  	z.style.display="none";
-  }
-  
-</script>
- <div>
- 	<div style="text-align: center">
-  <button type="button" onclick = "myFunction()" id = "createbutton" class="btn btn-outline-primary">Join</button>
 </div>
- </div>
-<div>
+<div id="entrystuff">
+  <button type="button" onclick = "addEntry()" id = "createbutton" class="btn btn-outline-primary">Send</button>
+  <input type="text" id="chatinput" onfocus="this.value=''">
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type='text/javascript' src="./jshashes/hashes.min.js"></script>
+
+<script>
+  var eventSource = new EventSource("/poll");
+
+  eventSource.onmessage = function(e) {
+    alert('wewlad');
+  }
+
+  var allEntries = null;
+  $.getJSON(window.location.pathname + '.json', function(vals) {
+    allEntries = vals;
+    allEntries.forEach(e => {
+      appendEntryElement(e.c);
+    });
+  });
+
+  function appendEntryElement(entryContent){
+    var entry = document.createElement("p");
+    entry.id = "entry";
+    entry.innerHTML = entryContent;
+    $('#entries').append(entry);
+  };
+
+  function computeHash(node) {
+    var SHA256 = new Hashes.SHA256().hex(node.p + node.t + node.c);
+    return SHA256;
+  };
+
+  function addEntry() {
+    if(allEntries != null) {
+      var content = $('#chatinput').val();
+      document.getElementById('chatinput').value = '';
+      var prev_hash = computeHash(allEntries[allEntries.length - 1])
+      var ts = Math.round((new Date()).getTime() / 1000);
+      var head = {"p":prev_hash, "t":ts, "c":content}
+      var headHash = computeHash(head)
+      var tempEntries = allEntries
+      $.ajax({
+        type: "GET",
+        url: "/hash",
+        data: {groupid: window.location.pathname, uid: "abcdef", bc: JSON.stringify(head), headhash: headHash},
+        // data: {groupid: window.location.pathname, uid: "abcdef", bc: JSON.stringify(allEntries[0]), headhash: headHash},
+        success: function (data) {
+          if(data == "1"){
+            allEntries.push(head);
+            appendEntryElement(content);
+          }
+        }
+      })
+    } else {
+      alert('null');
+    }
+
+  };
+
+
+</script>
+<!-- <div>
     <div align = "center">
         <form action="/" method="post" enctype="multipart/form-data">
         
@@ -176,7 +191,7 @@ a {
 $(document).ready(function(){
  
 });
-</script>
+</script> -->
 
 
 </body>
