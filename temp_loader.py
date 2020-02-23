@@ -4,10 +4,10 @@ import json
 
 class TChatHistory():
 
-    def __init__(self, history_num: str):
+    def __init__(self, id: str):
         super().__init__()
         self._entries = []
-        self._history_num = history_num
+        self._id = id
 
     def add_entry(self, timestamp, author, alias, content):
         self._entries.append(
@@ -20,17 +20,17 @@ class TChatHistory():
         )
 
     def save(self):
-        history_path = './data/{}.json'.format(self._history_num)
-        with open(history_path, 'w') as f:
+        id_path = './data/{}.json'.format(self._id)
+        with open(id_path, 'w') as f:
             f.write(json.dumps(self._entries, indent=4))
 
     @staticmethod
-    def load(history_path):
+    def load(id_path):
         # entry_path = './data/{}.json'.format(entrynum)
-        history_num = history_path.replace('.json', '')
-        with open('./data/' + history_path, 'r') as f:
+        id = id_path.replace('.json', '')
+        with open('./data/' + id_path, 'r') as f:
             jsd = json.loads(f.read())
-        ch = TChatHistory(history_num)
+        ch = TChatHistory(id)
         ch._entries = jsd
         return ch
 
