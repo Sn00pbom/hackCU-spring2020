@@ -70,7 +70,7 @@ class ScanHandler(BaseHTTPRequestHandler):
                     self.end_headers()
                     # with open('./web' + self.path, 'rb') as f:
                     #     self.wfile.write(f.read())
-                    with open('./web/chathome.html', 'rb') as f:
+                    with open('./web/chat.html', 'rb') as f:
                         self.wfile.write(f.read())
 
                 else:
