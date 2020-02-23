@@ -21,6 +21,10 @@ class Block(object):
     def compute_block_hash(self):
         return hl.sha256(bytes(self._concat_all(), 'utf-8')).hexdigest()
 
+    @staticmethod
+    def block_chain_to_json(bc: list):
+        return json.dumps([block.convert_dict() for block in bc])
+
 
 def rand_hash():
     s = ''
