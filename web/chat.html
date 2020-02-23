@@ -62,28 +62,91 @@ a {
   
 .msgln { margin:0 0 2px 0; }
 </style>
- 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+<script type="text/javascript">
+	var encrypted;
+  var decrypted;
+  var message = "gAAAAABeUlFH68CYdD5QKEV_BO8IY1X5ix8NP90oY554c3IqVAT6XeQRirG3CZDCXDmXjHU9S-RfH0RFLWZwj0CzER_qYA8KQR898CLt6ZheiokCfa_SMOo=";
+	var key = "XUAnULtC5geCdt383CVPryp1kDRGEOtr1KabYKnlemY=";
+    
+	function crypt(){
+		//console.log("hi")
+        encrypted=CryptoJS.AES.encrypt(message, key, { iv: iv });
+		console.log(message);
+		//encrypted=CryptoJS.AES.encrypt(message,key);
+		console.log(encrypted.toString());
+	}
+	function decrypt(){
+		decrypted=CryptoJS.AES.decrypt(encrypted,key);
+		console.log(decrypted.toString(CryptoJS.enc.Utf8));
+	}
+
+
+</script>
+<script>
+	
+  function myFunction() {
+	var x = document.getElementById("name-open");
+	if (x.style.display === "none") {
+	  x.style.display = "block";
+	}
+  }  
+    function myFunction2() {
+    	var empty_stirng=true;
+    var x = document.getElementById("wrapper");
+    var name = document.getElementById("username").value;
+    if(name.length==""){
+    	empty_stirng=false;
+    }
+    if(empty_stirng==true){
+    	document.getElementById("name-of-user").innerHTML=name,
+    	//console.log(name)
+    	closeall();
+    	    if (x.style.display === "none") {
+      x.style.display = "block";
+    }
+    }
+    else{
+    	alert("You need a name boss")
+    }
+
+  } 
+
+  function closeall(){
+  	var x = document.getElementById("name-open");
+  	var y = document.getElementById("submit-button-div");
+  	var z = document.getElementById("createbutton");
+  	x.style.display="none";
+  	y.style.display="none";
+  	z.style.display="none";
+  }
+  
+</script>
+ <div>
+ 	<div style="text-align: center">
+  <button type="button" onclick = "myFunction()" id = "createbutton" class="btn btn-outline-primary">Join</button>
+</div>
+ </div>
 <div>
     <div align = "center">
-
         <form action="/" method="post" enctype="multipart/form-data">
         
-          <div id = "myelement" style="display:none">
-          
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-              </div>
-              <input type="text" class="form-control" placeholder="groupname" aria-label="Username" aria-describedby="basic-addon1" id = "group name">
-            </div>
-      
-            <div class="input-group mb-3">
+          <div id = "myelement">
+                
+            <div class="input-group mb-3" id="name-open" style="display:none">
               <input type="text" class="form-control" placeholder="username" aria-label="Recipient's username" aria-describedby="basic-addon2" id = "username" >
               <div class="input-group-append">
               </div>
             </div>
       
-            <div style="text-align: center">
-                <button type="button" onclick = "request()" id = "requestbutton" class="btn btn-outline-primary">Submit</button>
+            <div style="text-align: center" id="submit-button-div">
+                <button type="button" onclick = "myFunction2()" onclick="crypt()"  id = "requestbutton" class="btn btn-outline-primary">Submit</button>
+            </div>
+            <div style="text-align: center" id="submit-button-div">
+                <button type="button"  onclick="crypt()"  id = "requestbutton" class="btn btn-outline-primary">Fuck Zack</button>
+            </div>
+            <div style="text-align: center" id="submit-button-div">
+                <button type="button"  onclick="decrypt()"  id = "requestbutton" class="btn btn-outline-primary">Egeyyyyy stuff</button>
             </div>
       
           </div>
@@ -92,9 +155,10 @@ a {
       </div>
 </div>
 
-<div id="wrapper">
+<div id="wrapper" style="display:none">
     <div id="menu">
-        <p class="welcome">Welcome, <b></b></p>
+    	<p class="welcome">welcome    </p>
+        <p class="welcome" id="name-of-user">, <b></b></p>
         <p class="logout"><a id="exit" href="#">Close Chat</a></p>
         <div style="clear:both"></div>
     </div>
@@ -103,7 +167,7 @@ a {
      
     <form name="message" action="">
         <input name="usermsg" type="text" id="usermsg" size="63" />
-        <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
+        <input name="submitmsg" type="submit"  id="submitmsg" value="ege" />
     </form>
 </div>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
@@ -113,5 +177,7 @@ $(document).ready(function(){
  
 });
 </script>
+
+
 </body>
 </html>
