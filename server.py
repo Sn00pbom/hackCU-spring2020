@@ -46,6 +46,8 @@ class ScanHandler(BaseHTTPRequestHandler):
                 # file request case
                 if self.path.endswith('.css'):
                     mimetype = 'text/css'
+                if self.path.endswith('.js'):
+                    mimetype = 'application/javascript'
 
                 try:
                     self.send_response(200)
@@ -68,7 +70,7 @@ class ScanHandler(BaseHTTPRequestHandler):
                     self.end_headers()
                     # with open('./web' + self.path, 'rb') as f:
                     #     self.wfile.write(f.read())
-                    with open('./web' + '/chathome.html', 'rb') as f:
+                    with open('./web/chathome.html', 'rb') as f:
                         self.wfile.write(f.read())
 
                 else:
