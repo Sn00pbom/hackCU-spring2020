@@ -34,7 +34,7 @@
 
 <script>
   function request(){
-    $.get( "./create", function(data) { alert(data) });
+    $.get( "./create", function(data) { window.location.replace(data) });
     // $.get( "./create", alert("wewlad") );
   }
   
